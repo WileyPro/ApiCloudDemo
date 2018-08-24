@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            background-color: #fff;
+            margin: 0;
+        }
+
+        #wrap {
+            height: 100%;
+            position: relative;
+        }
+
+        #header {
+            background-color: #5082c2;
+            height: 44px;
+            position: relative;
+        }
+
+        #header h1 {
+            font-size: 20px;
+            height: 44px;
+            line-height: 44px;
+            margin: 0em;
+            color: #fff;
+            margin-left: 100px;
+            margin-right: 100px;
+            text-align: center;
+        }
+
+        #main {
+            display: block;
+        }
+
+        a.button {
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            height: 36px;
+            margin: 8px;
+            background-color: rgba(240, 240, 240, 1.0);
+            border-color: rgba(220, 220, 220, 1.0);
+            border-width: 2px;
+            border-style: solid;
+        }
+
+        a.active {
+            background-color: rgba(240, 240, 240, 0.6);
+        }
+
+        #con {
+            margin: 10px;
+            font-size: 24px;
+        }
+
+        button {
+            width: 100px;
+            height: 30px;
+            background-color: #eee;
+        }
+
+        img {
+            width: 140px;
+            height: 160px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="main">
+            <a class="button" tapmode="active" onclick="tackPhoto()">点击拍照</a>
+        </div>
+        <div>
+            <a class="button" tapmode="active" onclick="compress()">点击压缩</a>
+        </div>
+        <img id="img" src="">
+        <img id="comp" src="">
+
+        <div id='sys-success'></div>
+        <div id='sys-error'></div>
+    </div>
+
+</body>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+
+    var imgPath = '';
+
+    tackPhoto = function() {
+        api.getPicture({
+            sourceType: 'camera',
+            encodingType: 'jpg',
+            mediaValue: 'pic',
+            destinationType: 'url',
+            allowEdit: false,
+        }, function(ret, err) {
+            if (ret) {
+                $api.byId('img').src = ret.data;
+                imgPath = ret.data;
+                $api.byId('sys-success').innerHTML = JSON.stringify(ret);
+            }
+            if (err) {
+                $api.byId('sys-error').innerHTML = JSON.stringify(err);
+            }
+        });
+    };
+
+    compress = function() {
+        var demo = api.require('yhZoomImageModule');
+        demo.compress({
+            imgName: 'newImg.jpeg',
+            imgPath: imgPath,
+            imgSize: 100 * 1024
+        }, function(ret, err) {
+            if (ret) {
+                $api.byId('comp').src = ret.filePath;
+                $api.byId('sys-success').innerHTML = JSON.stringify(ret);
+            }
+            if (err) {
+                $api.byId('sys-error').innerHTML = JSON.stringify(err);
+            }
+        });
+    };
+
+    apiready = function() {};
+
+</script>
+
+</html>
